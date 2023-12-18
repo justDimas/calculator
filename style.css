@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+html{
+	font-size: 16px;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+}
+
+:root{
+	--color-background: #DAF0FF;
+	--color-calc: #000;
+	--color-operations-numbers: #818181;
+	--color-operations-signs: #1991FF;
+	--color-result: #fff;
+	--color-button-background-common: #303136;
+	--color-button-background-blue: #1991FF;
+	--color-button-background-grey: #616161;
+	--color-button-text-common: #1991FF;
+	--color-button-text-blue: #B2DAFF;
+	--color-button-text-grey: #A5A5A5;
+}
+
+.wrapper{
+	position: absolute;
+	inset: 0;
+	overflow: auto;
+	background-color: var(--color-background);
+}
+.container{
+	max-width: 375px;
+	margin: 100px auto;
+	
+}
+.calc{
+	background-color: var(--color-calc);
+	border-radius: 40px;
+	padding: 30px;
+}
+.display{
+	text-align: right;
+	margin-top: 60px;
+}
+.operations{
+	font-weight: 400;
+	color: var(--color-operations-numbers);
+	font-size: 1.5rem;
+}
+.operations>span{
+	color: var(--color-operations-signs);
+}
+.result{
+	color: var(--color-result);
+	font-size: 3rem;
+}
+.body{
+	display: grid;
+	gap: 20px;
+	grid-template-columns: repeat(4, 1fr);
+	margin-top: 60px;
+}
+.button{
+	font-weight: inherit;
+	font-size: 2rem;
+	font-family: inherit;
+	box-sizing: border-box;
+	cursor: pointer;
+	width: 60px;
+	height: 60px;
+	padding: 0;
+	border: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 16px;
+	background-color: var(--color-button-background-common);
+	color: var(--color-button-text-common);
+	transition: opacity .1s ease-in-out;
+}
+#arrow-button::before{
+	content: '';
+	display: block;
+	border-top: 8px solid transparent;
+	border-right: 16px solid var(--color-button-text-grey);;
+	border-bottom: 8px solid transparent;
+}
+#arrow-button::after{
+	content: '';
+	display: block;
+	width: 16px;
+	height: 6px;
+	background-color: var(--color-button-text-grey);;
+}
+.button:hover{
+	opacity: 0.7;
+}
+.button._tight{
+	height: 40px;
+	font-size: 1rem;
+}
+.button._tall{
+	height: 140px;
+	grid-row-start: span 2;
+}
+.button._wide{
+	width: 140px;
+	grid-column-start: span 2;
+}
+.button._blue{
+	background-color: var(--color-button-background-blue);
+	color: var(--color-button-text-blue);
+}
+.button._grey{
+	background-color: var(--color-button-background-grey);
+	color: var(--color-button-text-grey);
+	font-size: 1.5rem;
+	font-weight: 400;
+}
