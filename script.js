@@ -18,10 +18,10 @@ function sortValues(e){
 		case 'm-': break
 		
 		case 'ac': 
-			operationsBox.innerText = ''
 			firstOperand = ''
 			secondOperand = ''
 			sign = ''
+			resultBox.innerText = '=0'
 			break
 		
 		case 'del':
@@ -51,19 +51,23 @@ function sortValues(e){
 			break
 
 		case '=':
+			if(firstOperand && secondOperand && sign)
+				getResult()
 			break
 	}
-	console.log({'1':firstOperand, '2':secondOperand, 's':sign, 'op': operationsBox.innerText});
+	operationsBox.innerText = firstOperand+sign+secondOperand
 }
 
 function numberInputed(value){
-	if(operationsBox.innerText.endsWith('0')) 
-		deleteCharacter()	
-	if(sign)
-		secondOperand+=value
-	if(!sign)
-		firstOperand+=value
-	operationsBox.innerText += value
+	if(sign){
+		if(value==='0')
+			if((secondOperand.startsWith('0') || secondOperand.startsWith('-0')) && !secondOperand.match(/\./)) return
+		secondOperand += value
+	}else{
+		if(value==='0')
+			if((firstOperand.startsWith('0') || firstOperand.startsWith('-0')) && !firstOperand.match(/\./)) return
+		firstOperand += value
+	}
 }
 
 function signInputed(value){
@@ -71,13 +75,11 @@ function signInputed(value){
 		case '.':
 			if(!firstOperand){
 				firstOperand = `0${value}`
-				operationsBox.innerText += `0${value}`
 				break
 			}
 
 			if(firstOperand && !sign) {
 				if(!firstOperand.match(/\./)){
-					operationsBox.innerText += (firstOperand.match(/\d/)) ? value : `0${value}` 
 					firstOperand += (firstOperand.match(/\d/)) ? value : `0${value}`
 				}
 				break
@@ -85,16 +87,19 @@ function signInputed(value){
 
 			if(firstOperand && sign && !secondOperand){
 				secondOperand += `0${value}`
-				operationsBox.innerText += `0${value}`
 				break
 			}
 
-			if(firstOperand && sign && secondOperand) break		
+			if(firstOperand && sign && secondOperand) {
+				if(!secondOperand.match(/\./)){
+					secondOperand += (secondOperand.match(/\d/)) ? value : `0${value}`
+				}
+			}		
+			break
 
 		case '-':
 			if(!firstOperand){
 				firstOperand = value	
-				operationsBox.innerText += value
 				break
 			}
 
@@ -106,7 +111,6 @@ function signInputed(value){
 				}
 				if(firstOperand.match(/\d/)){
 					sign = value
-					operationsBox.innerText += value
 					break
 				}
 			}
@@ -115,14 +119,11 @@ function signInputed(value){
 				if(sign === '-'){
 					deleteCharacter()
 					sign = '+'
-					operationsBox.innerText += '+'
 				}else if(sign === '+'){
 					deleteCharacter()
 					sign = '-'
-					operationsBox.innerText += '-'
 				}else{
 					secondOperand += value
-					operationsBox.innerText += value
 				}
 				break	
 			}
@@ -142,9 +143,9 @@ function signInputed(value){
 
 			if(firstOperand && sign && secondOperand){
 				if(firstOperand.match(/\d/)){
-					//TODO
+					secondOperand+=value
+					getResult()
 				}
-				break
 			}
 			break
 
@@ -156,16 +157,16 @@ function signInputed(value){
 				if(firstOperand.match(/\d/)){
 					sign = value
 					operationsBox.innerText += value
-					break
 				}
+				break
 			}
 
 			if(firstOperand && sign && !secondOperand) break
 
 			if(firstOperand && sign && secondOperand){
 				if(firstOperand.match(/\d/)) getResult(value)
-				break
 			}
+
 			break
 
 		case '+':
@@ -176,24 +177,56 @@ function signInputed(value){
 					sign = value
 					operationsBox.innerText += value
 				}
+				break
 			}
 
 			if(firstOperand && sign && !secondOperand) break
 
 			if(firstOperand && sign && secondOperand){
 				if(firstOperand.match(/\d/)) getResult(value)
-				break
 			}
+
 			break
 	}
 
 }
 
 function deleteCharacter(){
-	//TODO  
-	operationsBox.innerText = operationsBox.innerText.slice(0, -1) 
+	if(secondOperand){
+		secondOperand = secondOperand.slice(0,-1)
+	}else	if(!secondOperand && sign){
+		sign = ''
+	}else if(!secondOperand && !sign && firstOperand){
+		firstOperand = firstOperand.slice(0, -1)
+	}else{
+		resultBox.innerText = '=0'
+	}
 }
 
-function getResult(value){
-	//TODO
+function getResult(lastSign=''){
+	let parsedFirst = parseFloat(firstOperand)
+	let parsedSecond = parseFloat(secondOperand)
+
+	if(secondOperand.endsWith('%')){
+		parsedSecond *= parsedFirst / 100
+	}
+	
+	switch(sign){
+		case'-':
+			firstOperand = (Math.floor((parsedFirst-parsedSecond)*100000)/100000).toString()
+			break
+		case'+':
+			firstOperand = (Math.floor((parsedFirst+parsedSecond)*100000)/100000).toString()
+			break
+		case'*':
+			firstOperand = (Math.floor(parsedFirst*parsedSecond*100000)/100000).toString()
+			break
+		case'/':
+			firstOperand = (Math.floor(parsedFirst/parsedSecond*100000)/100000).toString()
+			break
+	}
+	
+	secondOperand=''
+	sign = lastSign
+	resultBox.innerText = `=${firstOperand}`
 }
