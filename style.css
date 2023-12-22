@@ -4,6 +4,7 @@ html{
 	font-size: 16px;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 500;
+	line-height: 1.4;
 }
 
 :root{
@@ -41,9 +42,11 @@ html{
 	margin-top: 60px;
 }
 .operations{
-	font-weight: 400;
 	color: var(--color-operations-numbers);
+	overflow: hidden;
+	font-weight: 400;
 	font-size: 1.5rem;
+	height: 1.4em;
 }
 .operations>span{
 	color: var(--color-operations-signs);
@@ -51,6 +54,7 @@ html{
 .result{
 	color: var(--color-result);
 	font-size: 3rem;
+	height: 1.4em;
 }
 .body{
 	display: grid;
